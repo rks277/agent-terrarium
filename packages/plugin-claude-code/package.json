@@ -1,0 +1,17 @@
+{
+  "name": "@repo-orch/plugin-claude-code",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist/**"
+  ],
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "scripts": {
+    "build": "node -e \"console.log('plugin-claude-code: static assets, nothing to build')\"",
+    "typecheck": "node -e \"console.log('plugin-claude-code: nothing to typecheck')\"",
+    "test": "node -e \"console.log('plugin-claude-code: no tests')\""
+  }
+}

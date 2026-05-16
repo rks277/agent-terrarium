@@ -1,0 +1,43 @@
+[
+  {
+    "type": "session.started",
+    "sessionId": "sess-fixture-1",
+    "repoPath": "/repo/fixture",
+    "occurredAt": "2026-05-16T10:00:00.000Z",
+    "payload": {}
+  },
+  {
+    "type": "prompt.submitted",
+    "sessionId": "sess-fixture-1",
+    "repoPath": "/repo/fixture",
+    "occurredAt": "2026-05-16T10:00:00.000Z",
+    "payload": { "length": 5 }
+  },
+  {
+    "type": "assistant.turn_completed",
+    "sessionId": "sess-fixture-1",
+    "repoPath": "/repo/fixture",
+    "occurredAt": "2026-05-16T10:00:02.000Z",
+    "payload": {
+      "model": "claude-opus-4-7",
+      "usage": { "input": 120, "output": 15, "cacheRead": 0, "cacheCreation": 0 }
+    }
+  },
+  {
+    "type": "tool.used",
+    "sessionId": "sess-fixture-1",
+    "repoPath": "/repo/fixture",
+    "occurredAt": "2026-05-16T10:00:02.000Z",
+    "payload": { "toolName": "Read" }
+  },
+  {
+    "type": "assistant.turn_completed",
+    "sessionId": "sess-fixture-1",
+    "repoPath": "/repo/fixture",
+    "occurredAt": "2026-05-16T10:00:05.000Z",
+    "payload": {
+      "model": "claude-opus-4-7",
+      "usage": { "input": 200, "output": 40, "cacheRead": 100, "cacheCreation": 0 }
+    }
+  }
+]

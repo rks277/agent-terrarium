@@ -28,21 +28,23 @@ That command will:
 3. Write `~/Library/LaunchAgents/co.repo-orch.daemon.plist` and `launchctl load` it.
 4. Start the daemon — it begins watching `~/.claude/projects/` immediately.
 
-### Enable hook delivery (one-time, inside Claude Code)
+### Enable hook delivery (required, one-time, inside Claude Code)
 
-On most Claude Code versions the plugin is auto-discovered from
-`~/.claude/plugins/repo-orch/` and hook delivery starts working immediately. If
-`doctor` shows no hook-derived events after a few sessions, register the plugin
-manually — run this once inside any Claude Code session:
+File-dropping the plugin at `~/.claude/plugins/repo-orch/` is *not* enough on
+its own — Claude Code does not auto-discover plugins from that directory on
+the versions we've tested. You must register the plugin manually once. Run
+this inside any Claude Code session, after `install` has finished:
 
 ```
 /plugin marketplace add ~/.claude/plugins/repo-orch
 /plugin install repo-orch@repo-orch
 ```
 
-You only need to do this once per machine. Without it the daemon still works
-from transcript reads — you just lose the low-latency overlay (permission
-prompts, etc.).
+After that, Claude Code copies the plugin into its own cache
+(`~/.claude/plugins/cache/repo-orch/repo-orch/<version>/`) and starts firing
+hooks. You only need to do this once per machine. If you skip it the daemon
+still works from transcript reads — you just lose the low-latency overlay
+(permission prompts, exact tool boundaries, etc.).
 
 ## Verify
 
@@ -117,12 +119,16 @@ node packages/cli/dist/index.js uninstall --yes --purge
 
 ### A note about `~/.claude/settings.json`
 
-The repo-orch installer never reads or writes `settings.json`. However, when
-Claude Code auto-discovers our plugin it *does* write a
-`"repo-orch@repo-orch": true` entry into its own `enabledPlugins` section of
-`settings.json`. That entry persists after uninstall — it's harmless (the
-plugin directory is gone, so Claude Code ignores the stale entry), but you can
-remove it by hand if you want a fully clean state.
+The repo-orch installer never reads or writes `settings.json`. However, the
+one-time `/plugin install repo-orch@repo-orch` step above causes *Claude Code
+itself* to write a `"repo-orch@repo-orch": true` entry into its own
+`enabledPlugins` section of `settings.json`, plus an entry in
+`installed_plugins.json`, plus a cached copy of the plugin under
+`~/.claude/plugins/cache/`. None of these are touched by our uninstaller. They
+persist after `repo-orch uninstall` — harmless (the source plugin directory is
+gone, so the hooks no longer fire), but if you want a fully clean state run
+`/plugin uninstall repo-orch@repo-orch` and `/plugin marketplace remove
+repo-orch` inside Claude Code before running `repo-orch uninstall`.
 
 ## Troubleshooting
 
@@ -130,6 +136,6 @@ remove it by hand if you want a fully clean state.
 |---|---|
 | `doctor`: daemon socket missing | `launchctl list \| grep co.repo-orch.daemon` — if missing, re-run `install`. |
 | `doctor`: 0 events ingested in last 24h | Run a Claude Code session. If still 0, check `~/.repo-orch/logs/daemon.log`. |
-| Hook events missing (only transcript-derived events) | Run the `/plugin marketplace add` + `/plugin install` pair above. |
+| Hook events missing (only transcript-derived events) | The plugin registration step was skipped or didn't take. Run the `/plugin marketplace add` + `/plugin install` pair above, then start a fresh Claude Code session (hooks only attach to new sessions). |
 | Want to reinstall over an existing install | `node packages/cli/dist/index.js install --force` |
 | Daemon won't start | Check `~/.repo-orch/logs/daemon.log` and `launchctl error <exit-code>`. |

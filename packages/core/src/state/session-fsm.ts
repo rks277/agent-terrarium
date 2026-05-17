@@ -9,7 +9,10 @@ export function reduceSessionState(
 
   switch (event.type) {
     case 'session.started':
-      return 'running';
+      // A freshly started session has not received a user prompt yet; it is
+      // waiting for the user to type one. UserPromptSubmit will transition to
+      // running once the user submits.
+      return 'awaiting_input';
 
     case 'session.ended':
       return 'ended';

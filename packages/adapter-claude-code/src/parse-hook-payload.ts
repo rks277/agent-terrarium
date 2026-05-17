@@ -13,6 +13,7 @@ type RawHook = {
   tool_name?: string;
   tool?: { name?: string };
   message?: string;
+  prompt?: string;
   prompt_type?: string;
   notification_type?: string;
   text?: string;
@@ -60,6 +61,17 @@ export function parseHookPayload(raw: unknown): EventEnvelope[] {
     case 'SessionEnd': {
       const reason = (h.reason === 'timeout' || h.reason === 'crash') ? h.reason : 'normal';
       return [{ ...base, eventId: ulid(), type: 'session.ended', payload: { reason } }];
+    }
+    case 'UserPromptSubmit': {
+      const text = h.prompt ?? h.text ?? h.message ?? '';
+      return [
+        {
+          ...base,
+          eventId: ulid(),
+          type: 'prompt.submitted',
+          payload: { length: text.length, text },
+        },
+      ];
     }
     case 'PermissionRequest':
       return [

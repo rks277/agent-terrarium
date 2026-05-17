@@ -58,6 +58,32 @@ describe('parseHookPayload', () => {
     }
   });
 
+  it('UserPromptSubmit → prompt.submitted with length and text', () => {
+    const events = parseHookPayload({
+      session_id: 's-prompt',
+      cwd: '/repo/a',
+      hook_event_name: 'UserPromptSubmit',
+      prompt: 'hello world',
+    });
+    expect(events[0]?.type).toBe('prompt.submitted');
+    if (events[0]?.type === 'prompt.submitted') {
+      expect(events[0].payload.length).toBe(11);
+      expect(events[0].payload.text).toBe('hello world');
+    }
+  });
+
+  it('UserPromptSubmit with no prompt body → length 0', () => {
+    const events = parseHookPayload({
+      session_id: 's-prompt2',
+      cwd: '/repo/a',
+      hook_event_name: 'UserPromptSubmit',
+    });
+    expect(events[0]?.type).toBe('prompt.submitted');
+    if (events[0]?.type === 'prompt.submitted') {
+      expect(events[0].payload.length).toBe(0);
+    }
+  });
+
   it('Stop → session.state_changed running→awaiting_input', () => {
     const events = parseHookPayload({
       session_id: 's5',

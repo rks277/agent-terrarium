@@ -17,8 +17,8 @@ function ev<T extends EventType>(type: T, payload: PayloadFor<T>): EventEnvelope
 }
 
 describe('reduceSessionState', () => {
-  it('unknown + session.started → running', () => {
-    expect(reduceSessionState('unknown', ev('session.started', {}))).toBe('running');
+  it('unknown + session.started → awaiting_input (fresh session has no prompt yet)', () => {
+    expect(reduceSessionState('unknown', ev('session.started', {}))).toBe('awaiting_input');
   });
 
   it('running + tool.used → running', () => {

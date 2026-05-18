@@ -102,4 +102,22 @@ describe('reduceSessionState', () => {
       ),
     ).toBe('running');
   });
+
+  it('awaiting_permission + assistant.turn_completed → running (implicit permission resolved)', () => {
+    expect(
+      reduceSessionState(
+        'awaiting_permission',
+        ev('assistant.turn_completed', {
+          model: 'claude-opus-4-7',
+          usage: { input: 1, output: 1, cacheRead: 0, cacheCreation: 0 },
+        }),
+      ),
+    ).toBe('running');
+  });
+
+  it('awaiting_permission + tool.used → running (implicit permission resolved)', () => {
+    expect(
+      reduceSessionState('awaiting_permission', ev('tool.used', { toolName: 'Bash' })),
+    ).toBe('running');
+  });
 });

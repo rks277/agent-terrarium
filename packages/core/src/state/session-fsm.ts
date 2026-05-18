@@ -34,6 +34,11 @@ export function reduceSessionState(
 
     case 'tool.used':
     case 'assistant.turn_completed':
-      return current === 'unknown' ? 'running' : current;
+      // A new assistant turn or tool use after awaiting_permission means the
+      // permission was resolved (granted or denied) and Claude is working again.
+      // No permission.resolved event is emitted by Claude Code, so this is our
+      // only signal to leave awaiting_permission between permission asks.
+      if (current === 'unknown' || current === 'awaiting_permission') return 'running';
+      return current;
   }
 }

@@ -10,7 +10,7 @@
     ".": "./src/index.js"
   },
   "scripts": {
-    "build": "node -e \"console.log('plugin-claude-code: static assets, nothing to build')\"",
+    "build": "node scripts/build.mjs",
     "typecheck": "node -e \"console.log('plugin-claude-code: nothing to typecheck')\"",
     "test": "node -e \"console.log('plugin-claude-code: no tests')\""
   }

@@ -1,0 +1,15 @@
+{
+  "name": "repo-orch",
+  "description": "Repo Orchestrator — local marketplace for the observability hook plugin",
+  "owner": {
+    "name": "Repo Orchestrator"
+  },
+  "plugins": [
+    {
+      "name": "repo-orch",
+      "description": "Observability hooks for the Repo Orchestrator daemon. Writes hook payloads into ~/.repo-orch/events/ as a maildir; the daemon ingests them.",
+      "source": "./plugins/repo-orch",
+      "version": "0.1.0"
+    }
+  ]
+}
